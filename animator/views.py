@@ -195,6 +195,7 @@ class AnimateAPI(View):
             'output_format': animation.output_format,
             'duration': animation.duration,
             'fps': animation.fps,
+            'source': 'drawinganimator',  # Identify source for credit validation
         }
 
         headers = {}
