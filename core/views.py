@@ -13,14 +13,17 @@ import config
 class IndexPage(View):
     def get(self, request):
         settings = GlobalVars.get_globals(request)
+        from animator.models import AnimationPreset
+        presets = AnimationPreset.objects.filter(is_active=True).order_by('sort_order')[:8]
         return render(
             request,
             'index.html',
             {
-                'title': config.PROJECT_NAME,
-                'description': settings.get('i18n').get('site_description', ''),
+                'title': f"{config.PROJECT_NAME} - Bring Your Drawings to Life with AI",
+                'description': 'Transform any sketch, doodle, or drawing into a walking, dancing, jumping animation with AI. Free to try!',
                 'page': 'home',
                 'g': settings,
+                'presets': presets,
             }
         )
 

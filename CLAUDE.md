@@ -113,15 +113,28 @@ Copy `config_example.py` to `config.py` and set:
 
 ### Server Details
 - **Domain**: drawinganimator.com
-- **API Domain**: api.drawinganimator.com (or api.imageeditor.ai)
+- **API Domain**: api.drawinganimator.com (CNAME to api.imageeditor.ai)
+- **Frontend Server**: 140.82.28.166
+- **API Server**: 38.248.6.142 (api.imageeditor.ai)
 - **Server User**: drawinganimator
 - **Deploy Path**: /home/www/drawinganimator
+- **Supervisor Process**: drawinganimator
+- **Gunicorn Port**: 127.0.0.1:8001
+- **DNS**: DigitalOcean (ns1.digitalocean.com, ns2.digitalocean.com, ns3.digitalocean.com)
 
 ### Deploy Commands
 ```bash
+# Via SSH (root access via key)
+ssh root@140.82.28.166
+
+# Via Ansible (requires group_vars/all setup)
 cd ansible
 ansible-playbook -i servers gitpull.yml           # Quick deploy
 ansible-playbook -i servers djangodeployubuntu20.yml  # Full deploy
+
+# Check status
+supervisorctl status drawinganimator
+tail -f /var/log/drawinganimator/gunicorn.log
 ```
 
 ## GPU API Integration

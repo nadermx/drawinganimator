@@ -1,80 +1,260 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="{{ g.lang.iso }}">
+<html lang="{{ g.lang.iso|default:'en' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }}</title>
-    <meta name="description" content="{{ description|safe }}">
+    <title>{{ title|default:"Drawing Animator - Bring Your Drawings to Life" }}</title>
+    <meta name="description" content="{{ description|default:'Transform any sketch, doodle, or drawing into a walking, dancing, jumping animation with AI. Free to try!' }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✏️</text></svg>">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ title }}">
-    <meta property="og:description" content="{{ description|safe }}">
+    <meta property="og:site_name" content="Drawing Animator">
+    <meta property="og:title" content="{{ title|default:'Drawing Animator - Bring Your Drawings to Life' }}">
+    <meta property="og:description" content="{{ description|default:'Transform any sketch into animation with AI' }}">
+    <meta property="og:image" content="{% static 'images/og-image.jpg' %}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ title|default:'Drawing Animator' }}">
+    <meta name="twitter:description" content="{{ description|default:'Transform any sketch into animation with AI' }}">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v={{ g.scripts_version }}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: white !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+            background: var(--primary-gradient);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #6366f1;
+            color: #6366f1;
+            font-weight: 600;
+            border-radius: 0.75rem;
+        }
+
+        .btn-outline-primary:hover {
+            background: #6366f1;
+            border-color: #6366f1;
+        }
+
+        .hero-gradient {
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .card-modern {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-lg);
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 3rem;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-video {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--card-shadow-lg);
+        }
+
+        .animation-example {
+            border-radius: 1rem;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .animation-example img {
+            width: 100%;
+            height: auto;
+        }
+
+        .badge-pro {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.65rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .stats-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+        }
+
+        footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v={{ g.scripts_version|default:'1.0.0' }}">
 
     <!-- Alternate languages -->
     <link href="{{ request.path }}" hreflang="x-default" rel="alternate">
     {% for lang in g.languages %}
     <link rel="alternate" hreflang="{{ lang.iso }}" href="{{ request.path }}?lang={{ lang.iso }}">
     {% endfor %}
+
+    {% block head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/?lang={{ g.lang.iso }}">{{ g.i18n.site_name|default:"MyProject" }}</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-pencil-fill me-2"></i>Drawing Animator
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'home' %} active{% endif %}" href="/?lang={{ g.lang.iso }}">{{ g.i18n.home|default:"Home" }}</a>
+                        <a class="nav-link fw-medium{% if page == 'home' %} active text-primary{% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'animate' %} active{% endif %}" href="/animate/?lang={{ g.lang.iso }}">Animate</a>
+                        <a class="nav-link fw-medium{% if page == 'animate' %} active text-primary{% endif %}" href="/animate/">Animate</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'gallery' %} active{% endif %}" href="/animate/gallery/?lang={{ g.lang.iso }}">Gallery</a>
+                        <a class="nav-link fw-medium{% if page == 'gallery' %} active text-primary{% endif %}" href="/animate/gallery/">Gallery</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'pricing' %} active{% endif %}" href="/pricing/?lang={{ g.lang.iso }}">{{ g.i18n.pricing|default:"Pricing" }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if page == 'contact' %} active{% endif %}" href="/contact/?lang={{ g.lang.iso }}">{{ g.i18n.contact|default:"Contact" }}</a>
+                        <a class="nav-link fw-medium{% if page == 'pricing' %} active text-primary{% endif %}" href="/pricing/">Pricing</a>
                     </li>
                 </ul>
 
                 <ul class="navbar-nav">
-                    <!-- Language Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ g.lang.name }}
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-                            {% for lang in g.languages %}
-                            <li><a class="dropdown-item" href="{{ request.path }}?lang={{ lang.iso }}">{{ lang.name }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'account' %} active{% endif %}" href="/account/">{{ g.i18n.account_label|default:"Account" }}</a>
+                        <a class="nav-link fw-medium" href="/account/">
+                            <i class="bi bi-person-circle me-1"></i>Account
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">{{ g.i18n.logout|default:"Logout" }}</a>
+                        <a class="btn btn-outline-primary btn-sm ms-2" href="{% url 'logout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'login' %} active{% endif %}" href="/login/?lang={{ g.lang.iso }}">{{ g.i18n.login|default:"Login" }}</a>
+                        <a class="nav-link fw-medium" href="/login/">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary ms-2" href="/signup/?lang={{ g.lang.iso }}">{{ g.i18n.sign_up|default:"Sign Up" }}</a>
+                        <a class="btn btn-primary btn-sm ms-2" href="/signup/">Sign Up Free</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -82,19 +262,63 @@
         </div>
     </nav>
 
-    <main class="py-4">
+    <main>
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-light py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-2">
-                <a href="/privacy/" class="text-decoration-none me-3">{{ g.i18n.privacy_policy|default:"Privacy Policy" }}</a>
-                <a href="/terms/" class="text-decoration-none me-3">{{ g.i18n.terms_of_service|default:"Terms of Service" }}</a>
-                <a href="/about/" class="text-decoration-none me-3">{{ g.i18n.about_us|default:"About Us" }}</a>
-                <a href="/contact/" class="text-decoration-none">{{ g.i18n.contact_us|default:"Contact Us" }}</a>
-            </p>
-            <p class="text-muted mb-0">&copy; {% now "Y" %} {{ g.i18n.site_name|default:"MyProject" }}</p>
+    <footer class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5 class="text-white mb-3">
+                        <i class="bi bi-pencil-fill me-2"></i>Drawing Animator
+                    </h5>
+                    <p class="small mb-3">Transform any drawing into amazing animations with the power of AI. Upload your sketch and watch it come to life!</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="fs-5"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="fs-5"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="fs-5"><i class="bi bi-tiktok"></i></a>
+                        <a href="#" class="fs-5"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white mb-3">Product</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="/animate/">Animate</a></li>
+                        <li class="mb-2"><a href="/animate/gallery/">Gallery</a></li>
+                        <li class="mb-2"><a href="/pricing/">Pricing</a></li>
+                        <li class="mb-2"><a href="/api/">API</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="/help/">Help Center</a></li>
+                        <li class="mb-2"><a href="/contact/">Contact Us</a></li>
+                        <li class="mb-2"><a href="/faq/">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white mb-3">Company</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="/about/">About</a></li>
+                        <li class="mb-2"><a href="/blog/">Blog</a></li>
+                        <li class="mb-2"><a href="/careers/">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white mb-3">Legal</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="/privacy/">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="/terms/">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <p class="small mb-0">&copy; {% now "Y" %} Drawing Animator. All rights reserved.</p>
+                <p class="small mb-0">Made with <i class="bi bi-heart-fill text-danger"></i> for creative people everywhere</p>
+            </div>
         </div>
     </footer>
 
