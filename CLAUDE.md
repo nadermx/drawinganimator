@@ -206,24 +206,35 @@ ansible -i servers server -m shell -a "tail -50 /var/log/api.imageeditor.ai/api.
 - `/home/john/texttospeechai/` - TTS processing using same GPU server
 - `/home/john/PycharmProjects/api.imageeditor.ai/` - The GPU API server itself
 
-## Static Files & Demo Images
+## Brand Positioning & Differentiation
 
-### Demo Images
-The landing page uses demo GIFs from animateadrawing.com to showcase real animation examples:
-- `https://animateadrawing.com/static/images/demos/examples/` - Animated output GIFs
-- `https://animateadrawing.com/static/images/demos/sources/` - Original drawing PNGs
-- `https://animateadrawing.com/static/images/demos/motions/` - Motion preview GIFs
+**drawinganimator.com** is positioned differently from competitors like animateadrawing.com:
 
-These are served from animateadrawing.com because the staticfiles directory on drawinganimator has root ownership, preventing collectstatic from working.
+### Key Differentiators
+1. **Works with ANY drawing** - Not just characters/stick figures
+   - Landscapes, nature scenes
+   - Abstract art & patterns
+   - Still life & objects
+   - Portraits & faces
+   - Architecture
 
-### Available Demo Files
-- **Examples**: stick_walk.gif, stick_dance.gif, stick_wave.gif, cartoon_cat.gif, robot.gif
-- **Sources**: stick_walk.png, cartoon_cat.png, robot.png (before images)
-- **Motions**: walk_*.gif, run_*.gif, dance_*.gif, jump_*.gif, wave_*.gif, idle_*.gif
+2. **Stable Video Diffusion AI** - State-of-the-art image-to-video model
+   - Creates natural, flowing motion
+   - Motion intensity control (1-255 scale)
+   - HD 1024px output at 25fps
 
-### To Fix staticfiles Permissions (requires sudo)
+3. **Target Audience** - Artists, designers, content creators
+   - Professional/sophisticated positioning
+   - Dark, gallery-like visual design
+
+### Animation Capabilities
+The API supports TWO animation approaches:
+1. **Character Animation** (skeletal) - walk, run, dance, jump, wave, idle, kick, punch
+2. **Stable Video Diffusion** - AI-generated motion for any image type
+
+### Static Files Issue
+The staticfiles directory has root ownership, preventing collectstatic. To fix (requires sudo):
 ```bash
-# On server 140.82.28.166 with sudo access:
 chown -R drawinganimator:drawinganimator /home/www/drawinganimator/staticfiles
 python manage.py collectstatic --noinput
 ```
