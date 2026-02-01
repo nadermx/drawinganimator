@@ -1,0 +1,68 @@
+<script defer>
+    (function () {
+        'use strict';
+        $(document).ready(
+            function () {
+                var squareAppId = '{{ square.id }}';
+                var postalCodeText = '{{ g.i18n.postal_code | default:'Postal code' }}';
+                var mmYY = '{{ g.i18n.mmyy |default:'MM/YY' }}';
+                var cVV = '{{ g.i18n.cvv | default:'CVV' }}';
+                var paymentForm;
+                var container = $('.page-container');
+
+                container.on('submit', '.squareup-form', payWithSquareup);
+                initSquare();
+
+                function initSquare() {
+                    paymentForm = new SqPaymentForm({
+                        applicationId: squareAppId,
+                        inputClass: 'sq-input',
+                        autoBuild: false,
+                        inputStyles: [{
+                            fontSize: '14px',
+                            lineHeight: '40px',
+                            padding: '6px 12px',
+                            placeholderColor: '#727272',
+                            backgroundColor: 'transparent',
+                        }],
+                        cardNumber: {
+                            elementId: 'sq-card-number',
+                            placeholder: 'XXXX-XXXX-XXXX-XXXX'
+                        },
+                        cvv: {
+                            elementId: 'sq-cvv',
+                            placeholder: cVV
+                        },
+                        expirationDate: {
+                            elementId: 'sq-expiration-date',
+                            placeholder: mmYY
+                        },
+                        postalCode: {
+                            elementId: 'sq-postal-code',
+                            placeholder: postalCodeText
+                        },
+                        callbacks: {
+                            cardNonceResponseReceived: function (errors, nonce, cardData) {
+                                var target = $('.squareup-form');
+
+                                target.find('button').addClass('m-progress').attr('disabled', 'disabled');
+                                target.find('[name=nonce]').val(nonce);
+                                target.submit();
+                            }
+                        }
+                    });
+
+                    paymentForm.build();
+                }
+
+                function payWithSquareup(e) {
+                    if (!$(this).find('[name=processing]').val()) {
+                        e.preventDefault();
+                        $(this).find('[name=processing]').val(1);
+                        paymentForm.requestCardNonce();
+                    }
+                }
+            }
+        );
+    }());
+</script>

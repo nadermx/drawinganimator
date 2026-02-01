@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ g.i18n.cancel }}</h1>
+<div class="container text-center">
+    <h3>{{ g.i18n.delete_account}}</h3><br>
+    <p>{{ g.i18n.delete_account_info }}</p>
+
+    <form action="/delete-account/" method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger">{{ g.i18n.delete_account }}</button>
+    </form>
+
+</div>
+<br><br><br><br>
+{% endblock %}

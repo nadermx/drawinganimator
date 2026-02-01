@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container text-center">
+        <h1 class="page-header">{{ g.i18n.pricing|default:"Pricing" }}</h1>
+        <p class="lead">{{ g.i18n.pricing_subtitle|default:"Choose the plan that works for you" }}</p>
+    </div>
+    <form class="container-md pricing-form"
+          action="{% url 'checkout' %}"
+          method="get">
+        <div class="row">
+            {% for plan in plans %}
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="plan"
+                               id="{{ plan.code_name }}"
+                               value="{{ plan.code_name }}"
+                               {% if forloop.first %}checked{% endif %} >
+                        <label class="form-check-label"
+                               for="{{ plan.code_name }}">
+                                <span class="price-wrapper">
+                                    <span class="price-value">US$ {{ plan.price }}</span><br>
+                                    {% if plan.is_subscription %}
+                                        {{ g.i18n.monthly|default:"per month" }}
+                                    {% else %}
+                                        {{ g.i18n.single_charge|default:"one-time" }}
+                                    {% endif %}
+                                </span>
+                            <br>
+                            <span class="plan-check">
+                                {% include 'svgs/check.html' %}
+                                {% if plan.credits %}
+                                    <span>{{ plan.credits }} {{ g.i18n.credits|default:"credits" }}</span>
+                                {% else %}
+                                    <span>{{ g.i18n.unlimited_access|default:"Unlimited access" }}</span>
+                                {% endif %}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <button id="pricingbutton"
+                class="btn btn-success btn-lg">{{ g.i18n.purchase|default:"Purchase" }}</button>
+        <br>
+        <p class="small mt-3">
+            <strong>{{ g.i18n.risk_free|default:"Risk-free" }}:</strong> {{ g.i18n.money_back|default:"30-day money-back guarantee" }}<br>
+            <strong>{{ g.i18n.flexible|default:"Flexible" }}:</strong> {{ g.i18n.change_plan_whenever|default:"Change or cancel anytime" }}<br>
+            <strong>{{ g.i18n.fair|default:"Fair" }}:</strong> {{ g.i18n.credits_never_expire|default:"Credits never expire" | safe }}
+        </p>
+    </form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container hero-container">
+    <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+            <div class="hero-description margin-less">
+                <h1>{{ g.i18n.about|default:"About Us" }}</h1>
+                <br>
+                <p>{{ g.i18n.about_intro|default:"Welcome to our platform." }}</p>
+                <p>{{ g.i18n.about_mission|default:"Our mission is to provide excellent service to our users." }}</p>
+                <p>{{ g.i18n.about_team|default:"We are a dedicated team working to improve your experience." }}</p>
+                <p>{{ g.i18n.about_contact|default:"Feel free to reach out if you have any questions." }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br>
+{% endblock %}

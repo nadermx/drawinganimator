@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ g.i18n.cancel }}</h1>
+<div class="container">
+    <div class="row">
+        <h3>{{ g.i18n.cancelled_instantly}}</h3>
+        <form action="/cancel/" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">{{ g.i18n.cancel_subscription }}</button>
+        </form>
+        <p>{{ g.i18n.credits_dont_expire }}</p>
+
+    </div>
+</div>
+<br><br><br><br>
+{% endblock %}

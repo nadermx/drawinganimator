@@ -1,0 +1,12 @@
+{{ i18n.payment_recieved }}<br>
+<br>
+{{ i18n.transaction_id }}: {{ payment.uuid }}<br>
+{{ i18n.date }}: {{ payment.created_at | date }} <br>
+{{ i18n.payment_id }}: {{ payment.id }} <br>
+{{ i18n.amount }}: US$ {{ payment.amount }} <br>
+{% if user.plan_subscribed %}
+    {{ i18n.plan }}: {{ user.plan_subscribed }}
+{% endif %}
+<br>
+<br>
+{{ i18n.team }} {{ project_name }}

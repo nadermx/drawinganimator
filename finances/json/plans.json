@@ -1,0 +1,41 @@
+{
+    "starter": {
+        "code_name": "starter",
+        "price": 9,
+        "credits": 100,
+        "days": 31,
+        "subscription": true
+    },
+    "pro": {
+        "code_name": "pro",
+        "price": 29,
+        "credits": 500,
+        "days": 31,
+        "subscription": true
+    },
+    "enterprise": {
+        "code_name": "enterprise",
+        "price": 99,
+        "credits": 2000,
+        "days": 31,
+        "subscription": true
+    },
+    "credits_small": {
+        "code_name": "credits_small",
+        "price": 5,
+        "credits": 50,
+        "days": 365
+    },
+    "credits_medium": {
+        "code_name": "credits_medium",
+        "price": 15,
+        "credits": 200,
+        "days": 365
+    },
+    "credits_large": {
+        "code_name": "credits_large",
+        "price": 40,
+        "credits": 600,
+        "days": 365
+    }
+}

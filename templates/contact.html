@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container hero-container">
+        <div class="row">
+            <div class="col d-none d-sm-block"></div>
+            <div class="col">
+                <div class="hero-description margin-less box-shadowed">
+                    <p>{{ g.i18n.need_help }}</p>
+                    <a href="/cancel/">{{ g.i18n.cancel_subscription }}</a><br>
+                    <a href="/refund/">{{ g.i18n.request_refund }}</a>
+                    <hr>
+                    <h1>{{ g.i18n.contact }}</h1>
+                    {% if errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if success %}
+                        <div class="alert alert-success">
+                            {{ g.i18n.message_sent|default:"Your message has been sent. We'll get back to you soon." }}
+                        </div>
+                    {% else %}
+                    <form action="{{ request.path }}"
+                          method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{{ g.i18n.email_address }}</label>
+                            <input type="email"
+                                   class="form-control"
+                                   name="email"
+                                   value="{{ data.email | default:'' }}"
+                                   placeholder="john@doe.com">
+                        </div>
+                        <div class="form-group">
+                            <label>{{ g.i18n.message }}</label>
+                            <textarea name="message"
+                                      rows="5"
+                                      class="form-control">{{ data.message | default:'' }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            {{ form }}
+                        </div>
+                        <button class="btn btn-primary btn-lg btn-block">{{ g.i18n.send }}</button>
+                    </form>
+                    {% endif %}
+                    <hr>
+                    <p>{{ g.i18n.or_contact | safe }}</p>
+                </div>
+            </div>
+            <div class="col d-none d-sm-block"></div>
+
+        </div>
+
+    </div>
+    <br><br><br><br>
+{% endblock %}

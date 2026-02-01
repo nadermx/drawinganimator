@@ -1,0 +1,70 @@
+<script defer>
+    (function () {
+        'use strict';
+        $(document).ready(
+            function () {
+                var stripe, card;
+                var stripe_key = '{{ stripe.pk }}';
+                var container = $('.page-container');
+
+                container.on('submit', '.stripe-form', payWithStripe);
+                initializeStripe();
+
+                function initializeStripe() {
+                    stripe = window.Stripe(stripe_key);
+
+                    var elements = stripe.elements({
+                        locale: '{{ g.lang.iso }}'
+                    });
+                    var style = {
+                        base: {
+                            color: '#32325d',
+                            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                            fontSmoothing: 'antialiased',
+                            fontSize: '16px',
+                            '::placeholder': {
+                                color: '#aab7c4'
+                            }
+                        },
+                        invalid: {
+                            color: '#fa755a',
+                            iconColor: '#fa755a'
+                        }
+                    };
+
+                    card = elements.create('card', {hidePostalCode: true, style: style});
+                    card.mount('#card-element');
+                    card.addEventListener('change', function (event) {
+                        if (event.error) {
+                            alert(event.error.message);
+                        }
+                    });
+                }
+
+                function payWithStripe(e) {
+                    if (!$(this).find('[name=processing]').val()) {
+                        e.preventDefault();
+                        $(this).find('[name=processing]').val(1);
+                        stripeMakePayment();
+                        console.log('stopping')
+                    } else {
+                        console.log('processing')
+                    }
+                }
+
+                function stripeMakePayment() {
+                    stripe.createToken(card).then(function (result) {
+                        if (result.error) {
+                            container.find('.stripe-form').find('button').removeClass('m-progress').removeAttr('disabled');
+                            $(this).find('[name=processing]').val('');
+                            alert(result.error.message);
+                        } else {
+                            container.find('[name=nonce]').val(result.token.id);
+                            $('form.stripe-form').submit();
+                        }
+                    });
+                }
+            }
+        );
+    }());
+</script>

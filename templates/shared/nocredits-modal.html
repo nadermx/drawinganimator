@@ -1,0 +1,25 @@
+<div id="nocredits"
+     class="modal"
+     tabindex="-1"
+     role="dialog">
+    <div class="modal-dialog"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-features">
+                    <h3>{{ g.i18n.no_credits}}</h3>
+                    <p>{{ g.i18n.need_more_credits }}</p>
+                </div>
+                <div class="exceeded-wrapper text-center">
+                    {{ g.i18n.rate_limit_passed }}
+                    <span class="timer">00:00:00</span>
+                </div>
+                <br>
+                <div class="plan-button text-center">
+                    <a href="{% url 'pricing' %}?ref=ratelimit"
+                       class="btn btn-success">{{ g.i18n.buy_more_credits}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

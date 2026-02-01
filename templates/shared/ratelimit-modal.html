@@ -1,0 +1,36 @@
+<div id="ratelimit"
+     class="modal"
+     tabindex="-1"
+     role="dialog">
+    <div class="modal-dialog"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="exceeded-wrapper text-center">
+                    {{ g.i18n.rate_limit_passed }}
+                    <span class="timer">00:00:00</span><br>
+                    {% if user.is_authenticated %}
+                        {{ g.i18n.upgrade }}
+                        <a href="/signup?ref=ratelimit"><u>{{ g.i18n.sign_up }}</u></a>
+                    {% else %}
+                        <a href="/signup?ref=ratelimit"><u>{{ g.i18n.sign_up }}</u></a>
+                    {% endif %}
+                </div>
+                <div class="modal-features">
+                    <h3>{{ g.i18n.buying_credits }}</h3>
+                    {% include 'shared/features.html' %}
+                </div>
+                <br>
+                <div class="plan-button text-center">
+                    {% if user.is_authenticated %}
+                        <a href="/signup?ref=ratelimit"
+                           class="btn btn-success">{{ g.i18n.get_credits }}</a>
+                    {% else %}
+                        <a href="/signup?ref=ratelimit"
+                           class="btn btn-success">{{ g.i18n.get_credits }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

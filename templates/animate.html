@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold">Bring Your Drawing to Life</h1>
+                <p class="lead text-muted">Upload any sketch or drawing and watch it walk, dance, jump, and more!</p>
+            </div>
+
+            <!-- Usage Stats -->
+            <div class="text-center mb-4">
+                {% if is_pro %}
+                <span class="badge bg-success fs-6"><i class="bi bi-star-fill"></i> Pro Account - Unlimited Animations</span>
+                {% else %}
+                <span class="badge bg-secondary fs-6">{{ remaining }} of {{ daily_limit }} free animations remaining today</span>
+                {% if remaining == 0 %}
+                <a href="/pricing/" class="btn btn-warning btn-sm ms-2">Upgrade to Pro</a>
+                {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- Main Animation Interface -->
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body p-4">
+                    <form id="animateForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <!-- Left: Upload Area -->
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <h5 class="mb-3"><i class="bi bi-upload me-2"></i>1. Upload Your Drawing</h5>
+                                <div id="dropZone" class="border border-3 border-dashed rounded-4 p-5 text-center bg-light position-relative" style="min-height: 300px; cursor: pointer;">
+                                    <input type="file" id="imageInput" name="image" accept="image/png,image/jpeg,image/webp,image/gif" class="position-absolute w-100 h-100 top-0 start-0 opacity-0" style="cursor: pointer;">
+                                    <div id="uploadPrompt">
+                                        <i class="bi bi-cloud-arrow-up display-1 text-primary mb-3"></i>
+                                        <h5>Drag & drop your drawing here</h5>
+                                        <p class="text-muted mb-2">or click to browse</p>
+                                        <small class="text-muted">PNG, JPG, WebP up to 10MB</small>
+                                    </div>
+                                    <div id="previewContainer" class="d-none">
+                                        <img id="imagePreview" class="img-fluid rounded" style="max-height: 280px;">
+                                        <button type="button" id="clearImage" class="btn btn-sm btn-outline-danger mt-2">
+                                            <i class="bi bi-x-circle"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Animation Options -->
+                            <div class="col-md-6">
+                                <h5 class="mb-3"><i class="bi bi-magic me-2"></i>2. Choose Animation Style</h5>
+                                <div class="row g-2" id="presetGrid">
+                                    {% for preset in presets %}
+                                    <div class="col-4">
+                                        <div class="preset-card card h-100 text-center p-2 {% if forloop.first %}border-primary selected{% endif %} {% if preset.is_premium and not is_pro %}opacity-50{% endif %}"
+                                             data-preset="{{ preset.code_name }}"
+                                             data-premium="{{ preset.is_premium|yesno:'true,false' }}"
+                                             style="cursor: pointer;">
+                                            <i class="bi {{ preset.icon }} fs-3 mb-1 {% if preset.is_premium %}text-warning{% else %}text-primary{% endif %}"></i>
+                                            <small class="d-block">{{ preset.name }}</small>
+                                            {% if preset.is_premium %}
+                                            <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">PRO</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <div class="col-4">
+                                        <div class="preset-card card h-100 text-center p-2 border-primary selected" data-preset="walk" style="cursor: pointer;">
+                                            <i class="bi bi-person-walking fs-3 mb-1 text-primary"></i>
+                                            <small class="d-block">Walking</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="preset-card card h-100 text-center p-2" data-preset="dance" style="cursor: pointer;">
+                                            <i class="bi bi-music-note-beamed fs-3 mb-1 text-primary"></i>
+                                            <small class="d-block">Dancing</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="preset-card card h-100 text-center p-2" data-preset="jump" style="cursor: pointer;">
+                                            <i class="bi bi-arrow-up-circle fs-3 mb-1 text-primary"></i>
+                                            <small class="d-block">Jumping</small>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <input type="hidden" id="selectedPreset" name="preset" value="walk">
+
+                                <h5 class="mt-4 mb-3"><i class="bi bi-gear me-2"></i>3. Output Format</h5>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="format" id="formatGif" value="gif" checked>
+                                    <label class="btn btn-outline-primary" for="formatGif">GIF</label>
+
+                                    <input type="radio" class="btn-check" name="format" id="formatMp4" value="mp4" {% if not is_pro %}disabled{% endif %}>
+                                    <label class="btn btn-outline-primary {% if not is_pro %}disabled{% endif %}" for="formatMp4">
+                                        MP4 {% if not is_pro %}<i class="bi bi-lock-fill"></i>{% endif %}
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="format" id="formatWebm" value="webm" {% if not is_pro %}disabled{% endif %}>
+                                    <label class="btn btn-outline-primary {% if not is_pro %}disabled{% endif %}" for="formatWebm">
+                                        WebM {% if not is_pro %}<i class="bi bi-lock-fill"></i>{% endif %}
+                                    </label>
+                                </div>
+                                {% if not is_pro %}
+                                <small class="text-muted d-block mt-1">MP4/WebM formats available with Pro</small>
+                                {% endif %}
+
+                                <button type="submit" id="animateBtn" class="btn btn-primary btn-lg w-100 mt-4" {% if remaining == 0 %}disabled{% endif %}>
+                                    <i class="bi bi-play-fill me-2"></i>Animate My Drawing
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Processing Modal -->
+            <div class="modal fade" id="processingModal" tabindex="-1" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center p-4">
+                        <div id="processingState">
+                            <div class="spinner-border text-primary mb-3" style="width: 4rem; height: 4rem;"></div>
+                            <h4>Creating Your Animation</h4>
+                            <p class="text-muted mb-3">This usually takes 15-30 seconds...</p>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted">Processing: <span id="progressText">0%</span></small>
+                        </div>
+                        <div id="completedState" class="d-none">
+                            <i class="bi bi-check-circle-fill text-success display-1 mb-3"></i>
+                            <h4>Animation Complete!</h4>
+                            <div id="resultContainer" class="my-3">
+                                <img id="resultPreview" class="img-fluid rounded shadow" style="max-height: 300px;">
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a id="downloadBtn" href="#" class="btn btn-success btn-lg" download>
+                                    <i class="bi bi-download me-2"></i>Download Animation
+                                </a>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="resetForm()">
+                                    Create Another
+                                </button>
+                            </div>
+                        </div>
+                        <div id="errorState" class="d-none">
+                            <i class="bi bi-exclamation-triangle-fill text-danger display-1 mb-3"></i>
+                            <h4>Oops! Something went wrong</h4>
+                            <p id="errorMessage" class="text-muted">Please try again.</p>
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
+                                Try Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <div class="card border-0 bg-light h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-lightbulb display-4 text-warning mb-3"></i>
+                            <h5>Best Results</h5>
+                            <p class="text-muted small mb-0">Use drawings with a clear character figure on a plain background. Simple, bold lines work best!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 bg-light h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-person-arms-up display-4 text-primary mb-3"></i>
+                            <h5>Character Pose</h5>
+                            <p class="text-muted small mb-0">Draw your character in a neutral standing pose with arms slightly away from the body for best animation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 bg-light h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-image display-4 text-success mb-3"></i>
+                            <h5>Image Quality</h5>
+                            <p class="text-muted small mb-0">Higher resolution images produce smoother animations. Try to use at least 500x500 pixels.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const dropZone = document.getElementById('dropZone');
+const imageInput = document.getElementById('imageInput');
+const imagePreview = document.getElementById('imagePreview');
+const uploadPrompt = document.getElementById('uploadPrompt');
+const previewContainer = document.getElementById('previewContainer');
+const clearImageBtn = document.getElementById('clearImage');
+const animateForm = document.getElementById('animateForm');
+const animateBtn = document.getElementById('animateBtn');
+const processingModal = new bootstrap.Modal(document.getElementById('processingModal'));
+
+// Preset selection
+document.querySelectorAll('.preset-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const isPremium = this.dataset.premium === 'true';
+        const isPro = {{ is_pro|yesno:"true,false" }};
+
+        if (isPremium && !isPro) {
+            alert('This animation style is available with Pro! Upgrade to unlock all styles.');
+            return;
+        }
+
+        document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('selected', 'border-primary'));
+        this.classList.add('selected', 'border-primary');
+        document.getElementById('selectedPreset').value = this.dataset.preset;
+    });
+});
+
+// Drag and drop
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.add('border-primary'), false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-primary'), false);
+});
+
+dropZone.addEventListener('drop', handleDrop);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length > 0) {
+        imageInput.files = files;
+        handleFile(files[0]);
+    }
+}
+
+imageInput.addEventListener('change', function() {
+    if (this.files.length > 0) {
+        handleFile(this.files[0]);
+    }
+});
+
+function handleFile(file) {
+    if (!file.type.match(/^image\/(png|jpeg|webp|gif)$/)) {
+        alert('Please upload a PNG, JPEG, WebP, or GIF image.');
+        return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+        alert('File is too large. Maximum size is 10MB.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        imagePreview.src = e.target.result;
+        uploadPrompt.classList.add('d-none');
+        previewContainer.classList.remove('d-none');
+    };
+    reader.readAsDataURL(file);
+}
+
+clearImageBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    imageInput.value = '';
+    imagePreview.src = '';
+    uploadPrompt.classList.remove('d-none');
+    previewContainer.classList.add('d-none');
+});
+
+// Form submission
+animateForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    if (!imageInput.files.length) {
+        alert('Please upload an image first!');
+        return;
+    }
+
+    // Show processing modal
+    document.getElementById('processingState').classList.remove('d-none');
+    document.getElementById('completedState').classList.add('d-none');
+    document.getElementById('errorState').classList.add('d-none');
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressText').textContent = '0%';
+    processingModal.show();
+
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch('/animate/api/animate/', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Start polling for status
+            pollAnimationStatus(data.animation_id);
+        } else {
+            showError(data.error || 'Failed to start animation');
+        }
+    } catch (error) {
+        showError('Network error. Please try again.');
+    }
+});
+
+async function pollAnimationStatus(animationId) {
+    const maxAttempts = 60; // 60 * 2s = 2 minutes max
+    let attempts = 0;
+
+    const poll = async () => {
+        attempts++;
+
+        try {
+            const response = await fetch(`/animate/api/animation/status/${animationId}/`);
+            const data = await response.json();
+
+            if (data.status === 'completed') {
+                showCompleted(data.output_url);
+            } else if (data.status === 'failed') {
+                showError(data.error || 'Animation failed');
+            } else if (data.status === 'processing') {
+                updateProgress(data.progress || Math.min(attempts * 5, 90));
+                if (attempts < maxAttempts) {
+                    setTimeout(poll, 2000);
+                } else {
+                    showError('Animation is taking longer than expected. Please try again.');
+                }
+            } else {
+                if (attempts < maxAttempts) {
+                    setTimeout(poll, 2000);
+                }
+            }
+        } catch (error) {
+            if (attempts < maxAttempts) {
+                setTimeout(poll, 2000);
+            } else {
+                showError('Lost connection. Please try again.');
+            }
+        }
+    };
+
+    poll();
+}
+
+function updateProgress(percent) {
+    document.getElementById('progressBar').style.width = percent + '%';
+    document.getElementById('progressText').textContent = percent + '%';
+}
+
+function showCompleted(outputUrl) {
+    document.getElementById('processingState').classList.add('d-none');
+    document.getElementById('completedState').classList.remove('d-none');
+    document.getElementById('resultPreview').src = outputUrl;
+    document.getElementById('downloadBtn').href = outputUrl;
+}
+
+function showError(message) {
+    document.getElementById('processingState').classList.add('d-none');
+    document.getElementById('errorState').classList.remove('d-none');
+    document.getElementById('errorMessage').textContent = message;
+}
+
+function resetForm() {
+    imageInput.value = '';
+    imagePreview.src = '';
+    uploadPrompt.classList.remove('d-none');
+    previewContainer.classList.add('d-none');
+}
+</script>
+
+<style>
+.preset-card {
+    transition: all 0.2s ease;
+}
+.preset-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.preset-card.selected {
+    background: #e7f1ff;
+    border-width: 2px !important;
+}
+.border-dashed {
+    border-style: dashed !important;
+}
+#dropZone:hover {
+    background-color: #e9ecef !important;
+}
+</style>
+{% endblock %}

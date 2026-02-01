@@ -1,0 +1,96 @@
+---
+- hosts: all
+  tasks:
+
+    - name: Run the equivalent of "apt-get update" as a separate step
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: install default packages
+      become: true
+      apt:
+        pkg: [ 'vim', 'supervisor', 'nginx', 'certbot', 'python3-certbot-nginx',
+               'python3', 'python3-dev', 'python3-pip', 'unzip',
+               'htop', 'python3-virtualenv', 'git', 'build-essential', 'redis-server', 'postgresql', 'postgresql-contrib', 'libpq-dev' ]
+        state: latest
+    - name: Creates directory
+      become: true
+      file:
+        path: /home/www
+        state: directory
+        owner: "{{ansible_user}}"
+
+    - name: Install pexpect
+      pip:
+        name: pexpect
+
+    - name: Git clone
+      expect:
+        command: git clone -vvv "{{ githuburl }}" /home/www/"{{location}}"
+        responses:
+          Username: "{{ githubuser }}" # Username is a regex
+          Password: "{{ githubpassword }}" # Password is a regex
+
+    - name: Manually create the initial virtualenv
+      command: virtualenv /home/www/"{{location}}"/venv -p python3
+
+    - name: Upgrade pip
+      pip:
+        name: pip
+        extra_args: --upgrade
+        virtualenv: /home/www/{{location}}/venv
+
+    - name: Install requirements
+      pip:
+        requirements: /home/www/{{location}}/requirements.txt
+        virtualenv: /home/www/{{location}}/venv
+
+    - name: remove default nginx site config
+      become: true
+      file: path=/etc/nginx/sites-enabled/default state=absent
+
+    - name: Upload new nginx file
+      become: true
+      template:
+        src: files/nginx.conf.j2
+        dest: /etc/nginx/sites-available/{{ projectname }}.conf
+
+
+    - name: Create symbolic link
+      become: true
+      file:
+        src: /etc/nginx/sites-available/{{ projectname }}.conf
+        dest: /etc/nginx/sites-enabled/{{ projectname }}.conf
+        state: link
+        force: True
+
+    - name: Creates {{projectname}} error log directory
+      become: true
+      file:
+        path: /var/log/{{projectname}}/
+        state: directory
+        owner: "{{ansible_user}}"
+
+
+    - name: Upload supervisor file
+      become: true
+      template:
+        src: files/supervisor.conf.j2
+        dest: /etc/supervisor/conf.d/{{ projectname }}.conf
+
+    - name: reload supervisor
+      become: true
+      service: name=supervisor state=reloaded
+
+    - name: Supervisor reread
+      become: true
+      supervisorctl:
+        name: "{{ projectname }}"
+        state: present
+
+    - name: Supervisor update
+      become: true
+      supervisorctl:
+        name: "{{ projectname }}"
+        state: started

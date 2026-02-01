@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-4 text-center">{{ g.i18n.login|default:"Login" }}</h1>
+
+                    {% if errors %}
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            {% for error in errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <form action="{{ request.path }}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ g.i18n.email_address|default:"Email Address" }}</label>
+                            <input type="email" name="email" class="form-control" value="{{ data.email|default:'' }}" placeholder="john@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ g.i18n.password|default:"Password" }}</label>
+                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button class="btn btn-primary btn-lg" type="submit">{{ g.i18n.login|default:"Login" }}</button>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'lost-password' %}">{{ g.i18n.forgot_password|default:"Forgot password?" }}</a>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <p class="text-center mb-0">
+                        {{ g.i18n.dont_have_account|default:"Don't have an account?" }}
+                        <a href="{% url 'register' %}">{{ g.i18n.sign_up|default:"Sign up" }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

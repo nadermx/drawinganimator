@@ -1,0 +1,9 @@
+[program:{{projectname}}]
+command = /home/www/{{location}}/venv/bin/gunicorn --workers 3 --bind unix:/home/www/{{location}}/app.sock --bind [::1]:8000 app.wsgi:application
+environment=PATH="/home/www/{{location}}/venv/bin:%(ENV_PATH)s"
+directory = /home/www/{{location}}
+user = {{ansible_user}}
+stdout_logfile = /var/log/{{projectname}}/{{projectname}}.out.log
+stderr_logfile = /var/log/{{projectname}}/{{projectname}}.err.log
+autostart=true
+autorestart=true

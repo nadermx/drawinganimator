@@ -1,0 +1,40 @@
+<script defer>
+    (function () {
+        'use strict';
+        $(document).ready(
+            function () {
+                var container = $('.page-container');
+                var target = $('.paypal-form');
+
+                paypal.Button.render({
+                    env: '{{ paypal.env }}',
+                    style: {
+                        size: 'responsive'
+                    },
+                    payment: function (data, actions) {
+                        container.find('[name=processing]').val(1);
+
+                        var params = utils.formDataToJSON(target);
+
+                        return actions.request.post(
+                            '{% url 'api_payment_paypal' %}',
+                            params
+                        ).then(function (res) {
+                            if (res.link) {
+                                return window.location.href = res.link
+                            }
+
+                            return res.id;
+                        }, function () {
+                            alert('Error: Try again later or contact us.');
+                        });
+                    },
+                    onAuthorize: function (data, actions) {
+                        target.find('[name=nonce]').val(data.orderID);
+                        target.submit();
+                    }
+                }, '#paypal-button');
+            }
+        );
+    }());
+</script>

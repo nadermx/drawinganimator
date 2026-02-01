@@ -1,0 +1,26 @@
+---
+# Initial server setup - run once to create a non-root user and disable root login
+# Update the vars below before running
+
+- hosts: all
+  vars:
+    ansible_user: root
+    ansible_password: "CHANGE_ME"
+    ansible_sudo_pass: "CHANGE_ME"
+    newuser: myproject
+    newpassword: "CHANGE_ME"
+
+  tasks:
+    - name: create a new user called {{ newuser }}
+      become: true
+      user:
+          name: "{{ newuser }}"
+          state: present
+          groups: sudo
+          password: "{{ newpassword | password_hash('sha512') }}"
+
+    - name: Disable root login
+      become: true
+      user:
+        name: root
+        password_lock: true

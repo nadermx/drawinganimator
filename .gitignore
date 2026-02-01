@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Django
+*.log
+local_settings.py
+config.py
+db.sqlite3
+*.sqlite3
+
+# Static files
+staticfiles/
+uploads/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pem
+*.key
+.env
+*.env
+
+# Cache
+.cache/
+*.cache
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# Error logs
+error.log
+
+# Ansible secrets
+ansible/group_vars/all
+ansible/servers

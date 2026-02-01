@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container hero-container">
+        <br>
+        <div class="row">
+            <div class="col d-none d-sm-block"></div>
+            <div class="col">
+                <div class="hero-description margin-less box-shadowed">
+                    <h1 class="page-header">{{ g.i18n.verify_email }}</h1>
+                    <p class="sub-menu">{{ g.i18n.verify_email_subtitle }}</p>
+                    {% if errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form action="{{ request.path }}"
+                          method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{{ g.i18n.verification_code }}</label>
+                            <input type="text"
+                                   name="code"
+                                   class="form-control"
+                                   value="{{ data.code | default:'' }}"
+                                   placeholder="--------">
+                        </div>
+                        <button class="btn btn-primary btn-lg btn-block">{{ g.i18n.verify_email }}</button>
+                    </form>
+                    <hr>
+                    <p class="resent-wrapper">{{g.i18n.no_email }} <a href="{{ request.path }}" class="resend-verification-email">{{ g.i18n.resend_email}}</a></p>
+                </div>
+            </div>
+            <div class="col d-none d-sm-block"></div>
+        </div>
+    </div>
+    <br><br><br><br>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/utils.js?{{ g.scripts_version }}"></script>
+    <script defer>
+    (function () {
+        'use strict';
+        $(document).ready(
+            function () {
+                var container = $('.page-container');
+
+                container.on('click', '.resend-verification-email', onResendVerificationEmail);
+
+                function onResendVerificationEmail(e) {
+                    e.preventDefault();
+                    var p = utils.promiseRequest(
+                        null,
+                        'post',
+                        '{% url 'resend-verification' %}',
+                        {}
+                    );
+
+                    p.then(
+                        function (response) {
+                            container.find('.resent-wrapper').html(response);
+                        },
+                        function (errors) {
+                            alert(errors);
+                        }
+                    );
+                }
+            }
+        );
+    }());
+    </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container hero-container">
+        <div class="row">
+            <div class="col d-none d-sm-block"></div>
+            <div class="col">
+                <div class="hero-description margin-less box-shadowed">
+                    <h1 class="page-header">{{ g.i18n.refund_request }}</h1>
+                    {% if errors %}
+                        {{ errors }}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form action="{{ request.path }}"
+                          method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{{ g.i18n.transaction_id }}</label>
+                            <input type="text"
+                                   name="transaction_id"
+                                   class="form-control"
+                                   value="{{ data.transaction_id_refund | default:'' }}">
+                        </div>
+                        <div class="form-group">
+                            <label>{{ g.i18n.email_address }}</label>
+                            <input type="email"
+                                   name="email_refund"
+                                   class="form-control"
+                                   value="{{ data.email_refund | default:'' }}"
+                                   placeholder="john@doe.com">
+                        </div>
+                        <button class="btn btn-primary btn-block"
+                                tabindex="3">{{ g.i18n.make_refund}}
+                        </button>
+                    </form>
+                    <hr>
+                    <p><b>{{ g.i18n.info_where}}</b><br>{{ g.i18n.info_is}}</p>
+                </div>
+            </div>
+            <div class="col d-none d-sm-block"></div>
+        </div>
+    </div>
+    <br><br><br><br>
+{% endblock %}

@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-gradient text-center py-5 mb-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-3 fw-bold text-white mb-4">Bring Your Drawings to Life</h1>
+                <p class="lead text-white-50 mb-4 fs-4">
+                    Upload any sketch, doodle, or drawing and watch it walk, dance, jump, and more with AI-powered animation!
+                </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="/animate/" class="btn btn-light btn-lg px-5 py-3 fw-bold">
+                        <i class="bi bi-magic me-2"></i>Try It Free
+                    </a>
+                    <a href="#how-it-works" class="btn btn-outline-light btn-lg px-4 py-3">
+                        See How It Works
+                    </a>
+                </div>
+                <p class="text-white-50 mt-3 mb-0"><i class="bi bi-check-circle me-1"></i> No sign up required - 5 free animations daily</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Demo Section -->
+    <div class="row align-items-center mb-5 pb-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="position-relative">
+                <div class="bg-light rounded-4 p-4 text-center" style="min-height: 350px;">
+                    <!-- Placeholder for demo animation -->
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <div>
+                            <i class="bi bi-play-circle display-1 text-primary mb-3"></i>
+                            <h4 class="text-muted">Demo Animation</h4>
+                            <p class="text-muted small">Upload your drawing to see it come to life!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <h2 class="display-6 fw-bold mb-4">Transform Any Drawing Into Animation</h2>
+            <p class="lead text-muted mb-4">
+                Whether it's your child's artwork, a quick sketch, or a professional illustration - our AI understands the character and brings it to life with realistic motion.
+            </p>
+            <ul class="list-unstyled">
+                <li class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <strong>Works with any drawing style</strong> - pencil, marker, digital art
+                </li>
+                <li class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <strong>Multiple animation styles</strong> - walking, dancing, jumping, waving
+                </li>
+                <li class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <strong>Download as GIF or Video</strong> - share anywhere
+                </li>
+                <li class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <strong>Processing in seconds</strong> - not minutes
+                </li>
+            </ul>
+            <a href="/animate/" class="btn btn-primary btn-lg">
+                <i class="bi bi-arrow-right me-2"></i>Start Animating
+            </a>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div id="how-it-works" class="py-5 mb-5">
+        <h2 class="display-6 fw-bold text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                        <i class="bi bi-cloud-arrow-up display-4 text-primary"></i>
+                    </div>
+                    <h4>1. Upload Your Drawing</h4>
+                    <p class="text-muted">Drag and drop or browse to upload your sketch, doodle, or artwork. Works with PNG, JPG, and WebP.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                        <i class="bi bi-sliders display-4 text-primary"></i>
+                    </div>
+                    <h4>2. Choose Animation</h4>
+                    <p class="text-muted">Select from walking, dancing, jumping, and more. Our AI detects the character and applies natural motion.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                        <i class="bi bi-download display-4 text-primary"></i>
+                    </div>
+                    <h4>3. Download & Share</h4>
+                    <p class="text-muted">Get your animated drawing as a GIF or video. Share on social media, send to friends, or save forever!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animation Styles -->
+    <div class="py-5 mb-5 bg-light rounded-4 p-4">
+        <h2 class="display-6 fw-bold text-center mb-5">Animation Styles</h2>
+        <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-person-walking display-4 text-primary mb-2"></i>
+                        <h6 class="mb-0">Walking</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-music-note-beamed display-4 text-primary mb-2"></i>
+                        <h6 class="mb-0">Dancing</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-arrow-up-circle display-4 text-primary mb-2"></i>
+                        <h6 class="mb-0">Jumping</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-hand-wave display-4 text-primary mb-2"></i>
+                        <h6 class="mb-0">Waving</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-person-running display-4 text-primary mb-2"></i>
+                        <h6 class="mb-0">Running</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 text-center border-0 shadow-sm position-relative">
+                    <div class="card-body">
+                        <i class="bi bi-stars display-4 text-warning mb-2"></i>
+                        <h6 class="mb-0">+ More</h6>
+                        <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2" style="font-size: 0.6rem;">PRO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/pricing/" class="btn btn-outline-primary">See All Pro Features</a>
+        </div>
+    </div>
+
+    <!-- Use Cases -->
+    <div class="py-5 mb-5">
+        <h2 class="display-6 fw-bold text-center mb-5">Perfect For</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-house-heart display-4 text-danger mb-3"></i>
+                        <h5>Parents</h5>
+                        <p class="text-muted small mb-0">Animate your children's artwork and create magical memories they'll treasure forever.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-palette display-4 text-success mb-3"></i>
+                        <h5>Artists</h5>
+                        <p class="text-muted small mb-0">Bring your illustrations to life for portfolios, social media, or client presentations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-mortarboard display-4 text-primary mb-3"></i>
+                        <h5>Educators</h5>
+                        <p class="text-muted small mb-0">Create engaging animated content for lessons, presentations, and student projects.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-camera-video display-4 text-warning mb-3"></i>
+                        <h5>Content Creators</h5>
+                        <p class="text-muted small mb-0">Generate unique animated content for TikTok, Instagram, YouTube, and more.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Preview -->
+    <div class="py-5 mb-5 text-center">
+        <h2 class="display-6 fw-bold mb-4">Simple Pricing</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-5 col-lg-4">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <h4 class="text-muted mb-3">Free</h4>
+                        <div class="display-5 fw-bold mb-3">$0</div>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>5 animations per day</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>GIF output format</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Basic animation styles</li>
+                            <li class="mb-2 text-muted"><i class="bi bi-x text-muted me-2"></i>Watermark included</li>
+                        </ul>
+                        <a href="/animate/" class="btn btn-outline-primary w-100">Try Free</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 col-lg-4">
+                <div class="card h-100 border-0 shadow border-primary" style="border-width: 2px !important;">
+                    <div class="card-header bg-primary text-white text-center py-2">
+                        <small class="fw-bold">MOST POPULAR</small>
+                    </div>
+                    <div class="card-body p-4">
+                        <h4 class="text-primary mb-3">Pro</h4>
+                        <div class="display-5 fw-bold mb-3">$9.99<small class="fs-6 text-muted">/mo</small></div>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Unlimited animations</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>GIF, MP4, WebM formats</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>All animation styles</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>No watermark</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>HD quality output</li>
+                        </ul>
+                        <a href="/pricing/" class="btn btn-primary w-100">Get Pro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="text-center py-5 bg-primary bg-opacity-10 rounded-4 mb-5">
+        <h2 class="display-6 fw-bold mb-3">Ready to Animate?</h2>
+        <p class="lead text-muted mb-4">Start for free - no sign up required!</p>
+        <a href="/animate/" class="btn btn-primary btn-lg px-5 py-3">
+            <i class="bi bi-magic me-2"></i>Animate Your Drawing Now
+        </a>
+    </div>
+</div>
+{% endblock %}

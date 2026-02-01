@@ -1,0 +1,2 @@
+# Google Adsense - replace with your publisher ID
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

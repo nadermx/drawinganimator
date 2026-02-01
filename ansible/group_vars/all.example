@@ -1,0 +1,26 @@
+---
+# Copy this file to 'all' and fill in your values
+# cp all.example all
+
+# SSH user on the server
+ansible_user: myproject
+
+# SSH password (use vault in production)
+ansible_password: "your-secure-password"
+ansible_sudo_pass: "your-secure-password"
+
+# Project location directory name
+location: myproject
+
+# GitHub repository URL
+githuburl: https://github.com/yourusername/yourproject.git
+
+# GitHub credentials (use deploy keys or tokens in production)
+githubuser: yourusername
+githubpassword: "your-github-token"
+
+# Project name (used for nginx/supervisor configs)
+projectname: myproject
+
+# Domain name
+domain: myproject.com

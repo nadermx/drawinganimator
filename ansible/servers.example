@@ -1,0 +1,12 @@
+# Copy this file to 'servers' and fill in your server IPs
+# cp servers.example servers
+
+[all:vars]
+env=production
+ansible_python_interpreter=/usr/bin/python3
+pipelining = True
+
+[server]
+# Add your server IP addresses here, one per line:
+# 123.45.67.89
+# 123.45.67.90
