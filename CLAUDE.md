@@ -166,6 +166,46 @@ The API processes asynchronously and calls back when complete.
 3. **Motion Transfer**: Wan2.2-Animate applies motion from template video
 4. **Video Encoding**: FFmpeg generates GIF/MP4/WebM output
 
+## GPU Infrastructure
+
+This project uses the shared GPU server at api.imageeditor.ai for animation processing.
+
+### GPU Server Details
+- **Server**: 38.248.6.142 (api.imageeditor.ai)
+- **Hardware**: 4x Tesla P40 (24GB VRAM each)
+- **API Endpoint**: https://api.imageeditor.ai/v1/animate/
+
+### Central Documentation
+For complete GPU infrastructure documentation, see:
+- `/home/john/ai/CLAUDE.md` - Central GPU infrastructure docs
+- `/home/john/PycharmProjects/api.imageeditor.ai/CLAUDE.md` - API server docs
+
+### Error Handling
+
+The GPU API now supports OOM detection and automatic retry:
+- If GPU runs out of memory, job retries on a different GPU
+- GPU health tracking temporarily blacklists problematic GPUs
+- Pre-flight memory checks prevent jobs from starting on low-memory GPUs
+
+### Monitoring
+
+```bash
+# Check GPU status
+cd /home/john/PycharmProjects/api.imageeditor.ai/ansible
+ansible -i servers server -m shell -a "nvidia-smi" --become
+
+# GPU status dashboard
+# Visit: https://api.imageeditor.ai/gpu/
+
+# Check animation logs
+ansible -i servers server -m shell -a "tail -50 /var/log/api.imageeditor.ai/api.err.log" --become
+```
+
+### Related Projects
+- `/home/john/animateadrawing/` - Similar animation site using same GPU backend
+- `/home/john/texttospeechai/` - TTS processing using same GPU server
+- `/home/john/PycharmProjects/api.imageeditor.ai/` - The GPU API server itself
+
 ## Inherited from DjangoBase
 
 This project inherits standard patterns from djangobase:
