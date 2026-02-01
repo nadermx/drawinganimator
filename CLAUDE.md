@@ -206,6 +206,28 @@ ansible -i servers server -m shell -a "tail -50 /var/log/api.imageeditor.ai/api.
 - `/home/john/texttospeechai/` - TTS processing using same GPU server
 - `/home/john/PycharmProjects/api.imageeditor.ai/` - The GPU API server itself
 
+## Static Files & Demo Images
+
+### Demo Images
+The landing page uses demo GIFs from animateadrawing.com to showcase real animation examples:
+- `https://animateadrawing.com/static/images/demos/examples/` - Animated output GIFs
+- `https://animateadrawing.com/static/images/demos/sources/` - Original drawing PNGs
+- `https://animateadrawing.com/static/images/demos/motions/` - Motion preview GIFs
+
+These are served from animateadrawing.com because the staticfiles directory on drawinganimator has root ownership, preventing collectstatic from working.
+
+### Available Demo Files
+- **Examples**: stick_walk.gif, stick_dance.gif, stick_wave.gif, cartoon_cat.gif, robot.gif
+- **Sources**: stick_walk.png, cartoon_cat.png, robot.png (before images)
+- **Motions**: walk_*.gif, run_*.gif, dance_*.gif, jump_*.gif, wave_*.gif, idle_*.gif
+
+### To Fix staticfiles Permissions (requires sudo)
+```bash
+# On server 140.82.28.166 with sudo access:
+chown -R drawinganimator:drawinganimator /home/www/drawinganimator/staticfiles
+python manage.py collectstatic --noinput
+```
+
 ## Inherited from DjangoBase
 
 This project inherits standard patterns from djangobase:
