@@ -1,337 +1,452 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block head %}
+<style>
+    .hero-demo {
+        position: relative;
+        background: white;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .demo-before-after {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .demo-arrow {
+        font-size: 2.5rem;
+        color: #6366f1;
+        animation: pulse-arrow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-arrow {
+        0%, 100% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .demo-card {
+        background: #f8fafc;
+        border-radius: 16px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .demo-card img {
+        max-height: 280px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .demo-card-label {
+        padding: 12px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #f8fafc;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        padding: 16px;
+    }
+
+    .gallery-item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        padding: 40px 16px 16px;
+        color: white;
+    }
+
+    .motion-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .motion-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px -4px rgba(99, 102, 241, 0.2);
+    }
+
+    .motion-card img {
+        width: 100%;
+        height: 120px;
+        object-fit: contain;
+        margin-bottom: 12px;
+    }
+
+    .before-after-slider {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .feature-grid {
+        display: grid;
+        gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+        .feature-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .upload-zone {
+        border: 3px dashed #e2e8f0;
+        border-radius: 24px;
+        padding: 48px;
+        text-align: center;
+        background: white;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .upload-zone:hover {
+        border-color: #6366f1;
+        background: #f8fafc;
+    }
+
+    .floating-badge {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .highlight-text {
+        position: relative;
+        display: inline-block;
+    }
+
+    .highlight-text::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30%;
+        background: rgba(99, 102, 241, 0.2);
+        z-index: -1;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-gradient py-5">
     <div class="container py-5">
         <div class="row align-items-center g-5">
-            <div class="col-lg-6 text-white position-relative">
+            <div class="col-lg-5 text-white position-relative">
                 <span class="badge bg-white text-primary mb-3 px-3 py-2 fw-bold">
                     <i class="bi bi-stars me-1"></i> AI-Powered Animation
                 </span>
-                <h1 class="display-4 fw-bold mb-4" style="line-height: 1.2;">
-                    Turn Any Drawing Into a<br>
-                    <span style="text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); text-underline-offset: 8px;">Walking, Dancing</span> Animation
+                <h1 class="display-4 fw-bold mb-4" style="line-height: 1.15;">
+                    Turn Any Drawing Into<br>
+                    <span class="highlight-text">Walking, Dancing</span> Animation
                 </h1>
-                <p class="lead mb-4 opacity-90" style="font-size: 1.25rem;">
-                    Upload your kid's artwork, a quick sketch, or any character drawing. Our AI makes it walk, run, dance, and jump in seconds!
+                <p class="lead mb-4 opacity-90" style="font-size: 1.2rem;">
+                    Upload a sketch, doodle, or character drawing. Our AI detects the figure and makes it move naturally - walk, run, dance, jump, wave, and more!
                 </p>
                 <div class="d-flex flex-wrap gap-3 mb-4">
                     <a href="/animate/" class="btn btn-light btn-lg px-4 py-3 fw-bold text-primary">
-                        <i class="bi bi-magic me-2"></i>Try It Free Now
-                    </a>
-                    <a href="#demo" class="btn btn-outline-light btn-lg px-4 py-3">
-                        <i class="bi bi-play-circle me-2"></i>Watch Demo
+                        <i class="bi bi-magic me-2"></i>Animate Your Drawing
                     </a>
                 </div>
                 <div class="d-flex flex-wrap gap-4 small opacity-75">
-                    <span><i class="bi bi-check-circle-fill me-1"></i> No signup required</span>
-                    <span><i class="bi bi-check-circle-fill me-1"></i> 5 free animations daily</span>
-                    <span><i class="bi bi-check-circle-fill me-1"></i> Instant results</span>
+                    <span><i class="bi bi-check-circle-fill me-1"></i> Free to try</span>
+                    <span><i class="bi bi-check-circle-fill me-1"></i> No signup</span>
+                    <span><i class="bi bi-check-circle-fill me-1"></i> Instant GIF</span>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="position-relative">
-                    <!-- Main demo animation display -->
-                    <div class="bg-white rounded-4 p-4 shadow-lg">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="text-center mb-2">
-                                    <span class="badge bg-secondary bg-opacity-25 text-dark small">Before</span>
-                                </div>
-                                <div class="bg-light rounded-3 p-3 text-center" style="min-height: 200px;">
-                                    <svg viewBox="0 0 200 250" width="150" height="180" xmlns="http://www.w3.org/2000/svg">
-                                        <!-- Simple stick figure drawing -->
-                                        <circle cx="100" cy="40" r="30" fill="none" stroke="#333" stroke-width="3"/>
-                                        <line x1="100" y1="70" x2="100" y2="150" stroke="#333" stroke-width="3"/>
-                                        <line x1="100" y1="90" x2="60" y2="130" stroke="#333" stroke-width="3"/>
-                                        <line x1="100" y1="90" x2="140" y2="130" stroke="#333" stroke-width="3"/>
-                                        <line x1="100" y1="150" x2="70" y2="220" stroke="#333" stroke-width="3"/>
-                                        <line x1="100" y1="150" x2="130" y2="220" stroke="#333" stroke-width="3"/>
-                                        <!-- Face -->
-                                        <circle cx="88" cy="35" r="4" fill="#333"/>
-                                        <circle cx="112" cy="35" r="4" fill="#333"/>
-                                        <path d="M 88 50 Q 100 60 112 50" fill="none" stroke="#333" stroke-width="2"/>
-                                    </svg>
-                                    <p class="text-muted small mt-2 mb-0">Your drawing</p>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-center mb-2">
-                                    <span class="badge bg-primary small">After</span>
-                                </div>
-                                <div class="bg-light rounded-3 p-3 text-center position-relative overflow-hidden" style="min-height: 200px;">
-                                    <!-- Animated stick figure -->
-                                    <div class="animated-figure">
-                                        <svg viewBox="0 0 200 250" width="150" height="180" xmlns="http://www.w3.org/2000/svg">
-                                            <style>
-                                                @keyframes walk {
-                                                    0%, 100% { transform: rotate(-5deg); }
-                                                    50% { transform: rotate(5deg); }
-                                                }
-                                                @keyframes armSwing {
-                                                    0%, 100% { transform: rotate(20deg); }
-                                                    50% { transform: rotate(-20deg); }
-                                                }
-                                                .walking { animation: walk 0.5s ease-in-out infinite; transform-origin: 100px 70px; }
-                                            </style>
-                                            <g class="walking">
-                                                <circle cx="100" cy="40" r="30" fill="none" stroke="#6366f1" stroke-width="3"/>
-                                                <line x1="100" y1="70" x2="100" y2="150" stroke="#6366f1" stroke-width="3"/>
-                                                <line x1="100" y1="90" x2="60" y2="130" stroke="#6366f1" stroke-width="3"/>
-                                                <line x1="100" y1="90" x2="140" y2="130" stroke="#6366f1" stroke-width="3"/>
-                                                <line x1="100" y1="150" x2="70" y2="220" stroke="#6366f1" stroke-width="3"/>
-                                                <line x1="100" y1="150" x2="130" y2="220" stroke="#6366f1" stroke-width="3"/>
-                                                <circle cx="88" cy="35" r="4" fill="#6366f1"/>
-                                                <circle cx="112" cy="35" r="4" fill="#6366f1"/>
-                                                <path d="M 88 50 Q 100 60 112 50" fill="none" stroke="#6366f1" stroke-width="2"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <p class="text-primary small mt-2 mb-0 fw-semibold">Animated!</p>
-                                </div>
+            <div class="col-lg-7">
+                <!-- Real Before/After Demo -->
+                <div class="hero-demo">
+                    <div class="demo-before-after">
+                        <div class="demo-card">
+                            <div class="demo-card-label text-muted bg-light">Original Drawing</div>
+                            <div class="p-3">
+                                <img src="{% static 'images/demos/sources/stick_walk.png' %}" alt="Original stick figure drawing">
                             </div>
                         </div>
-                        <div class="mt-3 text-center">
-                            <span class="text-muted small">
-                                <i class="bi bi-lightning-charge-fill text-warning"></i>
-                                Processing takes ~10 seconds
-                            </span>
+                        <div class="demo-arrow">
+                            <i class="bi bi-arrow-right-circle-fill"></i>
+                        </div>
+                        <div class="demo-card" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+                            <div class="demo-card-label text-primary bg-primary bg-opacity-10">Animated!</div>
+                            <div class="p-3">
+                                <img src="{% static 'images/demos/examples/stick_walk.gif' %}" alt="Animated walking stick figure">
+                            </div>
                         </div>
                     </div>
-                    <!-- Floating elements -->
-                    <div class="position-absolute floating" style="top: -20px; right: -10px;">
-                        <span class="badge bg-success px-3 py-2 shadow">
-                            <i class="bi bi-check-lg me-1"></i> Free to try!
+                    <div class="mt-3 text-center">
+                        <span class="text-muted small">
+                            <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
+                            Same drawing, now walking! Processing takes ~10 seconds
                         </span>
                     </div>
                 </div>
+                <!-- Floating elements -->
+                <div class="position-absolute floating-badge" style="top: 0; right: 30px;">
+                    <span class="badge bg-success px-3 py-2 shadow-lg">
+                        <i class="bi bi-download me-1"></i> GIF + MP4
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Social Proof Bar -->
-<section class="bg-white py-4 border-bottom">
-    <div class="container">
-        <div class="row align-items-center justify-content-center text-center g-4">
-            <div class="col-6 col-md-3">
-                <div class="stats-number">100K+</div>
-                <div class="text-muted small">Animations Created</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stats-number">50K+</div>
-                <div class="text-muted small">Happy Users</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stats-number">4.9<small class="fs-5">/5</small></div>
-                <div class="text-muted small">User Rating</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stats-number">&lt;10s</div>
-                <div class="text-muted small">Processing Time</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Demo Section -->
-<section id="demo" class="py-5">
+<!-- Real Examples Gallery -->
+<section id="gallery" class="py-5 bg-white">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title">See It In Action</h2>
-            <p class="section-subtitle">Watch how easy it is to animate your drawings</p>
+            <h2 class="section-title">Real Animation Examples</h2>
+            <p class="section-subtitle">These are actual outputs from our AI - no mockups, no fakes</p>
         </div>
-        <div class="row g-4 justify-content-center">
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="card-modern p-4 text-center h-100">
-                    <div class="mb-3">
-                        <div class="feature-icon bg-primary bg-opacity-10 text-primary mx-auto">
-                            <i class="bi bi-person-walking"></i>
-                        </div>
-                    </div>
-                    <h5 class="fw-bold mb-2">Walking</h5>
-                    <p class="text-muted small mb-3">Natural walking motion with arm swing</p>
-                    <div class="bg-light rounded-3 p-3" style="min-height: 180px;">
-                        <div style="font-size: 5rem; animation: walk 0.6s ease-in-out infinite;">
-                            🚶
-                        </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/demos/examples/cartoon_cat.gif' %}" alt="Animated cartoon cat">
+                    <div class="gallery-item-overlay">
+                        <h5 class="mb-1 fw-bold">Cartoon Cat</h5>
+                        <small class="opacity-75">Dancing animation</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card-modern p-4 text-center h-100">
-                    <div class="mb-3">
-                        <div class="feature-icon bg-success bg-opacity-10 text-success mx-auto">
-                            <i class="bi bi-music-note-beamed"></i>
-                        </div>
-                    </div>
-                    <h5 class="fw-bold mb-2">Dancing</h5>
-                    <p class="text-muted small mb-3">Fun dance moves for any character</p>
-                    <div class="bg-light rounded-3 p-3" style="min-height: 180px;">
-                        <div style="font-size: 5rem; animation: bounce 0.4s ease-in-out infinite;">
-                            💃
-                        </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/demos/examples/stick_dance.gif' %}" alt="Stick figure dancing">
+                    <div class="gallery-item-overlay">
+                        <h5 class="mb-1 fw-bold">Stick Figure</h5>
+                        <small class="opacity-75">Dance moves</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card-modern p-4 text-center h-100">
-                    <div class="mb-3">
-                        <div class="feature-icon bg-warning bg-opacity-10 text-warning mx-auto">
-                            <i class="bi bi-arrow-up-circle"></i>
-                        </div>
-                    </div>
-                    <h5 class="fw-bold mb-2">Jumping</h5>
-                    <p class="text-muted small mb-3">Bouncy jump animation</p>
-                    <div class="bg-light rounded-3 p-3" style="min-height: 180px;">
-                        <div style="font-size: 5rem; animation: jump 0.5s ease-in-out infinite;">
-                            🦘
-                        </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/demos/examples/robot.gif' %}" alt="Animated robot">
+                    <div class="gallery-item-overlay">
+                        <h5 class="mb-1 fw-bold">Robot Character</h5>
+                        <small class="opacity-75">Walking motion</small>
                     </div>
                 </div>
             </div>
         </div>
         <div class="text-center mt-5">
-            <a href="/animate/" class="btn btn-primary btn-lg px-5">
-                <i class="bi bi-magic me-2"></i>Try All Animation Styles
+            <a href="/animate/gallery/" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-grid-3x3-gap me-2"></i>See More Examples
             </a>
         </div>
     </div>
 </section>
 
-<style>
-    @keyframes walk {
-        0%, 100% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-    }
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0) rotate(-5deg); }
-        50% { transform: translateY(-15px) rotate(5deg); }
-    }
-    @keyframes jump {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-30px); }
-    }
-</style>
-
-<!-- How It Works -->
-<section class="bg-light py-5">
+<!-- Animation Styles Section -->
+<section class="py-5 bg-light">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Three simple steps to bring your drawings to life</p>
+            <h2 class="section-title">Choose Your Motion</h2>
+            <p class="section-subtitle">15+ animation styles to bring characters to life</p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="text-center">
-                    <div class="position-relative d-inline-block mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
-                            <i class="bi bi-cloud-arrow-up"></i>
-                        </div>
-                        <span class="position-absolute top-0 start-100 translate-middle badge bg-dark rounded-pill">1</span>
-                    </div>
-                    <h4 class="fw-bold">Upload Your Drawing</h4>
-                    <p class="text-muted">Drag and drop any drawing - pencil sketch, marker art, digital illustration, or even your kid's crayon masterpiece!</p>
+        <div class="row g-4 justify-content-center">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="motion-card">
+                    <img src="{% static 'images/demos/motions/walk_06a651f4-5a1b-4e9e-b9e7-698d11344c87.gif' %}" alt="Walk animation">
+                    <h6 class="fw-bold mb-0">Walk</h6>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="text-center">
-                    <div class="position-relative d-inline-block mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
-                            <i class="bi bi-sliders"></i>
-                        </div>
-                        <span class="position-absolute top-0 start-100 translate-middle badge bg-dark rounded-pill">2</span>
-                    </div>
-                    <h4 class="fw-bold">Choose Animation</h4>
-                    <p class="text-muted">Pick from walking, dancing, jumping, waving, and more. Our AI detects your character and maps the motion perfectly.</p>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="motion-card">
+                    <img src="{% static 'images/demos/motions/run_103672eb-d5a4-4019-b3a4-d7f2ab3d40b8.gif' %}" alt="Run animation">
+                    <h6 class="fw-bold mb-0">Run</h6>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="motion-card">
+                    <img src="{% static 'images/demos/motions/dance_ae8edcbd-4905-4bd5-9749-e17adb89a13f.gif' %}" alt="Dance animation">
+                    <h6 class="fw-bold mb-0">Dance</h6>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="motion-card">
+                    <img src="{% static 'images/demos/motions/jump_653fbfd9-0ca0-4681-90b0-d9e2ebf3126d.gif' %}" alt="Jump animation">
+                    <h6 class="fw-bold mb-0">Jump</h6>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="motion-card">
+                    <img src="{% static 'images/demos/motions/wave_245229d0-2a8d-48a7-89e6-75b52d79d4e0.gif' %}" alt="Wave animation">
+                    <h6 class="fw-bold mb-0">Wave</h6>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="motion-card">
+                    <img src="{% static 'images/demos/motions/idle_745f9447-a321-4ab1-8f7b-3a16f6d39320.gif' %}" alt="Idle animation">
+                    <h6 class="fw-bold mb-0">Idle</h6>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4 justify-content-center mt-2">
+            <div class="col-12">
                 <div class="text-center">
-                    <div class="position-relative d-inline-block mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
-                            <i class="bi bi-download"></i>
-                        </div>
-                        <span class="position-absolute top-0 start-100 translate-middle badge bg-dark rounded-pill">3</span>
-                    </div>
-                    <h4 class="fw-bold">Download & Share</h4>
-                    <p class="text-muted">Get your animated creation as a GIF or video. Share on social media, send to friends, or save it forever!</p>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Kick</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Punch</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Dab</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Zombie Walk</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Backflip</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Cartwheel</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Gangnam Style</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Clap</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 me-2 mb-2">Spin</span>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Animation Styles Grid -->
+<!-- How It Works -->
 <section class="py-5">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title">Animation Styles</h2>
-            <p class="section-subtitle">Choose from a variety of motions for your character</p>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Three simple steps - no animation skills needed</p>
         </div>
-        <div class="row g-3 justify-content-center">
-            {% for preset in presets %}
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100{% if preset.is_premium %} border-warning{% endif %}">
-                    {% if preset.is_premium %}
-                    <span class="badge-pro position-absolute top-0 end-0 m-2">PRO</span>
-                    {% endif %}
-                    <i class="bi {{ preset.icon }} display-5 mb-2 {% if preset.is_premium %}text-warning{% else %}text-primary{% endif %}"></i>
-                    <h6 class="mb-0 fw-bold">{{ preset.name }}</h6>
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <div class="feature-grid">
+                    <div class="d-flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px;">1</div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Upload Your Drawing</h5>
+                            <p class="text-muted mb-0">Any character drawing works - pencil sketches, digital art, or your kid's crayon masterpiece. Just make sure the figure has a clear body shape.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px;">2</div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">AI Detects the Figure</h5>
+                            <p class="text-muted mb-0">Our AI uses pose detection to find the body, arms, and legs in your drawing. It maps skeletal points to make natural movement possible.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px;">3</div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Choose Motion & Animate</h5>
+                            <p class="text-muted mb-0">Select from walk, run, dance, jump, wave, and more. The AI applies the motion to your character and renders a looping GIF or video.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {% empty %}
-            <!-- Default presets if none loaded -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100">
-                    <i class="bi bi-person-walking display-5 mb-2 text-primary"></i>
-                    <h6 class="mb-0 fw-bold">Walking</h6>
+            <div class="col-lg-6">
+                <div class="card-modern p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-center p-3 bg-light rounded-3">
+                                <img src="{% static 'images/demos/sources/cartoon_cat.png' %}" alt="Cat drawing" class="img-fluid mb-2" style="max-height: 150px;">
+                                <div class="small text-muted">Upload</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, #e0f2fe, #ddd6fe);">
+                                <img src="{% static 'images/demos/examples/cartoon_cat.gif' %}" alt="Animated cat" class="img-fluid mb-2" style="max-height: 150px;">
+                                <div class="small text-primary fw-semibold">Animate!</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100">
-                    <i class="bi bi-person-running display-5 mb-2 text-primary"></i>
-                    <h6 class="mb-0 fw-bold">Running</h6>
+        </div>
+    </div>
+</section>
+
+<!-- What Works Best -->
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Tips for Best Results</h2>
+            <p class="section-subtitle">Get the most out of your animations</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern p-4 h-100 text-center">
+                    <div class="feature-icon bg-success bg-opacity-10 text-success mx-auto">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Clear Body Shape</h5>
+                    <p class="text-muted small mb-0">Drawings with visible head, body, arms, and legs work best. Stick figures are perfect!</p>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100">
-                    <i class="bi bi-music-note-beamed display-5 mb-2 text-primary"></i>
-                    <h6 class="mb-0 fw-bold">Dancing</h6>
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern p-4 h-100 text-center">
+                    <div class="feature-icon bg-success bg-opacity-10 text-success mx-auto">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Front-Facing Pose</h5>
+                    <p class="text-muted small mb-0">Characters facing forward or at slight angles give the AI the best data for motion mapping.</p>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100">
-                    <i class="bi bi-arrow-up-circle display-5 mb-2 text-primary"></i>
-                    <h6 class="mb-0 fw-bold">Jumping</h6>
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern p-4 h-100 text-center">
+                    <div class="feature-icon bg-success bg-opacity-10 text-success mx-auto">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Simple Background</h5>
+                    <p class="text-muted small mb-0">White or simple backgrounds help the AI focus on your character without distractions.</p>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100">
-                    <i class="bi bi-hand-wave display-5 mb-2 text-primary"></i>
-                    <h6 class="mb-0 fw-bold">Waving</h6>
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern p-4 h-100 text-center">
+                    <div class="feature-icon bg-success bg-opacity-10 text-success mx-auto">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Good Contrast</h5>
+                    <p class="text-muted small mb-0">Dark lines on light paper. The more contrast between character and background, the better.</p>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="card-modern p-3 text-center h-100 border-warning position-relative">
-                    <span class="badge-pro position-absolute top-0 end-0 m-2">PRO</span>
-                    <i class="bi bi-stars display-5 mb-2 text-warning"></i>
-                    <h6 class="mb-0 fw-bold">+ More</h6>
-                </div>
-            </div>
-            {% endfor %}
         </div>
     </div>
 </section>
 
 <!-- Use Cases -->
-<section class="bg-light py-5">
+<section class="py-5">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title">Perfect For Everyone</h2>
-            <p class="section-subtitle">From parents to professionals, everyone loves animated drawings</p>
+            <h2 class="section-title">Perfect For</h2>
+            <p class="section-subtitle">Who uses Drawing Animator?</p>
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-3">
@@ -340,7 +455,7 @@
                         <i class="bi bi-heart"></i>
                     </div>
                     <h5 class="fw-bold mb-2">Parents</h5>
-                    <p class="text-muted small mb-0">Turn your children's artwork into magical animated keepsakes they'll treasure forever. Watch their eyes light up!</p>
+                    <p class="text-muted small mb-0">Turn your children's artwork into magical animated keepsakes. Watch their eyes light up when their drawing walks!</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
@@ -349,7 +464,7 @@
                         <i class="bi bi-palette"></i>
                     </div>
                     <h5 class="fw-bold mb-2">Artists</h5>
-                    <p class="text-muted small mb-0">Bring illustrations to life for portfolios, social media, or client presentations. No animation skills needed.</p>
+                    <p class="text-muted small mb-0">Bring illustrations to life for portfolios and social media. Show clients animated previews of character designs.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
@@ -358,7 +473,7 @@
                         <i class="bi bi-mortarboard"></i>
                     </div>
                     <h5 class="fw-bold mb-2">Educators</h5>
-                    <p class="text-muted small mb-0">Create engaging animated content for lessons. Let students animate their own characters for projects!</p>
+                    <p class="text-muted small mb-0">Create engaging animated content for lessons. Let students animate their own characters for creative projects.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
@@ -366,94 +481,19 @@
                     <div class="feature-icon bg-warning bg-opacity-10 text-warning">
                         <i class="bi bi-camera-video"></i>
                     </div>
-                    <h5 class="fw-bold mb-2">Creators</h5>
-                    <p class="text-muted small mb-0">Generate unique animated content for TikTok, Instagram, YouTube Shorts, and more. Stand out from the crowd!</p>
+                    <h5 class="fw-bold mb-2">Content Creators</h5>
+                    <p class="text-muted small mb-0">Generate unique animated content for TikTok, Instagram Reels, and YouTube Shorts. Stand out with original animations.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Testimonials -->
-<section class="py-5">
+<!-- Pricing Preview -->
+<section class="py-5 bg-light">
     <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="section-title">Loved by Thousands</h2>
-            <p class="section-subtitle">See what our users are saying</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card-modern p-4 h-100">
-                    <div class="d-flex mb-3 text-warning">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="mb-3">"My daughter was SO excited to see her drawing of our cat actually walking! She's been drawing non-stop since. Absolute magic!"</p>
-                    <div class="d-flex align-items-center">
-                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                            <span class="fw-bold text-primary">SM</span>
-                        </div>
-                        <div>
-                            <div class="fw-bold">Sarah M.</div>
-                            <small class="text-muted">Parent</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-modern p-4 h-100">
-                    <div class="d-flex mb-3 text-warning">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="mb-3">"As an illustrator, this tool has become essential. I can now show clients animated previews of character designs. Game changer!"</p>
-                    <div class="d-flex align-items-center">
-                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                            <span class="fw-bold text-success">JC</span>
-                        </div>
-                        <div>
-                            <div class="fw-bold">James C.</div>
-                            <small class="text-muted">Freelance Illustrator</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-modern p-4 h-100">
-                    <div class="d-flex mb-3 text-warning">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="mb-3">"My TikToks with animated drawings get 3x more engagement. The dancing animation is hilarious! Definitely worth the Pro upgrade."</p>
-                    <div class="d-flex align-items-center">
-                        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                            <span class="fw-bold text-warning">AT</span>
-                        </div>
-                        <div>
-                            <div class="fw-bold">Alex T.</div>
-                            <small class="text-muted">Content Creator</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Pricing -->
-<section class="bg-light py-5">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            <h2 class="section-title">Simple Pricing</h2>
             <p class="section-subtitle">Start free, upgrade when you need more</p>
         </div>
         <div class="row justify-content-center g-4">
@@ -475,7 +515,7 @@
                         </li>
                         <li class="mb-3 d-flex align-items-center">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span>5 animation styles</span>
+                            <span>Basic animation styles</span>
                         </li>
                         <li class="mb-3 d-flex align-items-center text-muted">
                             <i class="bi bi-x-circle me-2"></i>
@@ -483,14 +523,14 @@
                         </li>
                     </ul>
                     <a href="/animate/" class="btn btn-outline-primary w-100 py-2">
-                        Try Free
+                        Start Free
                     </a>
                 </div>
             </div>
             <div class="col-md-5 col-lg-4">
                 <div class="card-modern p-4 h-100 position-relative" style="border: 2px solid #6366f1;">
                     <div class="position-absolute top-0 start-50 translate-middle">
-                        <span class="badge bg-primary px-3 py-2">MOST POPULAR</span>
+                        <span class="badge bg-primary px-3 py-2">POPULAR</span>
                     </div>
                     <div class="text-center mt-3">
                         <h4 class="fw-bold text-primary mb-3">Pro</h4>
@@ -504,11 +544,11 @@
                         </li>
                         <li class="mb-3 d-flex align-items-center">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span>GIF, MP4, WebM formats</span>
+                            <span>GIF + MP4 + WebM</span>
                         </li>
                         <li class="mb-3 d-flex align-items-center">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span><strong>All</strong> animation styles</span>
+                            <span><strong>All 15+</strong> animation styles</span>
                         </li>
                         <li class="mb-3 d-flex align-items-center">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
@@ -516,7 +556,7 @@
                         </li>
                         <li class="mb-3 d-flex align-items-center">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            <span>HD quality output</span>
+                            <span>HD quality</span>
                         </li>
                         <li class="mb-3 d-flex align-items-center">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
@@ -535,12 +575,12 @@
 <!-- Final CTA -->
 <section class="hero-gradient py-5">
     <div class="container py-5 text-center text-white position-relative">
-        <h2 class="display-5 fw-bold mb-4">Ready to Bring Your Drawings to Life?</h2>
-        <p class="lead mb-4 opacity-90">Join thousands of happy users. Start animating for free today!</p>
+        <h2 class="display-5 fw-bold mb-4">Ready to Animate Your Drawings?</h2>
+        <p class="lead mb-4 opacity-90">Join thousands of users. Upload a drawing and see it move in seconds.</p>
         <a href="/animate/" class="btn btn-light btn-lg px-5 py-3 fw-bold text-primary">
-            <i class="bi bi-magic me-2"></i>Start Animating Now - It's Free!
+            <i class="bi bi-magic me-2"></i>Try It Free Now
         </a>
-        <p class="small mt-3 opacity-75">No credit card required. No signup needed.</p>
+        <p class="small mt-3 opacity-75">No account required. 5 free animations per day.</p>
     </div>
 </section>
 {% endblock %}
