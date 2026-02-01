@@ -179,38 +179,50 @@ class AnimateAPI(View):
 
     def send_to_api(self, animation):
         """Send animation request to the API backend."""
-        api_url = f"{config.API_BACKEND}/v1/animate-drawing/"
+        api_url = f"{config.API_BACKEND}/v1/animate/"
 
         # Read the image file
         animation.input_image.seek(0)
         files = {
-            'image': (animation.input_image.name, animation.input_image.read(), 'image/png')
+            'files': (animation.input_image.name, animation.input_image.read(), 'image/png')
         }
 
+        # Map animation preset to motion parameter
+        motion = animation.preset.code_name if animation.preset else 'walk'
+
         data = {
-            'animation_type': animation.preset.code_name if animation.preset else 'walk',
+            'motion': motion,
             'output_format': animation.output_format,
             'duration': animation.duration,
             'fps': animation.fps,
-            'loop': animation.loop,
-            'add_watermark': animation.add_watermark,
-            'callback_url': f"{config.ROOT_DOMAIN}/api/animation/callback/",
-            'animation_id': animation.uuid,
         }
 
         headers = {}
         if config.API_KEY:
-            headers['Authorization'] = f"Bearer {config.API_KEY}"
+            headers['Authorization'] = config.API_KEY
 
         try:
             response = requests.post(api_url, files=files, data=data, headers=headers, timeout=30)
-            return response.json()
+            result = response.json()
+
+            # Map api.imageeditor.ai response format to our expected format
+            if 'uuid' in result:
+                return {
+                    'success': True,
+                    'request_id': result.get('uuid'),
+                    'job_id': result.get('uuid'),
+                }
+            elif 'error' in result:
+                return {'success': False, 'error': result.get('error')}
+            else:
+                return {'success': True, 'request_id': result.get('uuid', '')}
+
         except requests.exceptions.RequestException as e:
             return {'success': False, 'error': str(e)}
 
 
 class AnimationStatus(View):
-    """Check animation status."""
+    """Check animation status by polling the API backend."""
 
     def get(self, request, animation_id):
         try:
@@ -220,6 +232,32 @@ class AnimationStatus(View):
                 'success': False,
                 'error': 'Animation not found'
             }, status=404)
+
+        # If still processing, poll the API backend for status
+        if animation.status == Animation.PROCESSING and animation.api_request_id:
+            try:
+                api_result = self.check_api_status(animation.api_request_id)
+                if api_result:
+                    if api_result.get('done'):
+                        # Animation completed
+                        output_url = api_result.get('output_url') or api_result.get('url')
+                        if output_url:
+                            animation.status = Animation.COMPLETED
+                            animation.output_url = output_url
+                            animation.completed_at = timezone.now()
+                            animation.progress = 100
+                            animation.save()
+                    elif api_result.get('failed'):
+                        animation.status = Animation.FAILED
+                        animation.error_message = api_result.get('error', 'Processing failed')
+                        animation.completed_at = timezone.now()
+                        animation.save()
+                    else:
+                        # Still processing - estimate progress
+                        animation.progress = min(animation.progress + 10, 90)
+                        animation.save()
+            except Exception:
+                pass  # Ignore API errors, just return current status
 
         response_data = {
             'success': True,
@@ -239,6 +277,49 @@ class AnimationStatus(View):
             response_data['error'] = animation.error_message or 'Animation failed'
 
         return JsonResponse(response_data)
+
+    def check_api_status(self, api_uuid):
+        """Poll api.imageeditor.ai for animation status."""
+        api_url = f"{config.API_BACKEND}/v1/animate/results/"
+
+        headers = {}
+        if config.API_KEY:
+            headers['Authorization'] = config.API_KEY
+
+        try:
+            response = requests.post(
+                api_url,
+                data={'uuid': api_uuid},
+                headers=headers,
+                timeout=10
+            )
+            result = response.json()
+
+            # Parse api.imageeditor.ai response format
+            if result.get('files'):
+                # Check if any file is complete
+                for file_data in result.get('files', []):
+                    if file_data.get('outputfile'):
+                        return {
+                            'done': True,
+                            'output_url': file_data.get('outputfile'),
+                        }
+                    elif file_data.get('failed'):
+                        return {
+                            'failed': True,
+                            'error': file_data.get('error', 'Processing failed'),
+                        }
+                # Still processing
+                return {'done': False}
+            elif result.get('failed'):
+                return {
+                    'failed': True,
+                    'error': result.get('errors', ['Processing failed'])[0] if result.get('errors') else 'Processing failed',
+                }
+
+            return {'done': False}
+        except Exception:
+            return None
 
 
 @csrf_exempt
