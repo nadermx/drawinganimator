@@ -101,10 +101,17 @@ Pro users get:
 - No watermark
 - Premium animation styles (dab, zombie, backflip, etc.)
 
+## API Configuration
+
+GPU processing is handled by the shared GPU server:
+- **API Domain**: `https://api.drawinganimator.com` (CNAME to api.imageeditor.ai)
+- **GPU Server**: 38.248.6.142 (4x Tesla P40, 96GB VRAM total)
+- **Config Variable**: `API_BACKEND` in config.py
+
 ## Configuration
 
 Copy `config_example.py` to `config.py` and set:
-- `API_BACKEND`: URL to api.imageeditor.ai
+- `API_BACKEND`: URL to api.drawinganimator.com (NOT api.imageeditor.ai)
 - `API_KEY`: Authentication key for API
 - `DATABASE`: PostgreSQL connection (production)
 - `STRIPE`: Payment keys
