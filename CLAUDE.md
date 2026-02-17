@@ -51,9 +51,37 @@ python manage.py createsuperuser
 python manage.py seed_presets     # Animation presets
 python manage.py set_languages    # Languages for i18n
 
-# Deployment
-cd ansible
-ansible-playbook -i servers gitpull.yml
+# Deployment -- NO gitpull.yml, use authenticated URL
+cd /home/john/drawinganimator/ansible
+ansible -i servers server -m shell -a "cd /home/www/drawinganimator && git pull https://nadermx:TOKEN@github.com/nadermx/drawinganimator.git main" --become --become-user=drawinganimator
+ansible -i servers server -m shell -a "supervisorctl restart drawinganimator" --become
+
+# Full initial deployment
+ansible-playbook -i servers djangodeployubuntu20.yml
+```
+
+### All Management Commands
+
+```bash
+# accounts
+python manage.py rebill                    # Process subscription renewals
+python manage.py remove_pro_for_old_plans  # Remove pro status for old plans
+python manage.py expire_pro_users          # Expire pro users
+python manage.py up_users_backup           # Backup user data
+
+# animator
+python manage.py seed_presets              # Seed animation presets
+
+# finances
+python manage.py set_plans                 # Setup payment plans
+python manage.py create_paypal_plans       # Create PayPal plans
+python manage.py create_paypal_product     # Create PayPal product
+
+# translations
+python manage.py set_languages             # Initialize translation languages
+python manage.py run_translation           # Auto-translate TextBase entries
+python manage.py delete_translations       # Delete translations
+python manage.py set_text_backup           # Backup translation text
 ```
 
 ## Key Models
@@ -121,27 +149,33 @@ Copy `config_example.py` to `config.py` and set:
 ### Server Details
 - **Domain**: drawinganimator.com
 - **API Domain**: api.drawinganimator.com (CNAME to api.imageeditor.ai)
-- **Frontend Server**: 140.82.28.166
+- **Frontend Server**: 140.82.28.166 (shared with animateadrawing.com)
 - **API Server**: 38.248.6.142 (api.imageeditor.ai)
-- **Server User**: drawinganimator
+- **ansible_user**: drawinganimator
 - **Deploy Path**: /home/www/drawinganimator
 - **Supervisor Process**: drawinganimator
 - **Gunicorn Port**: 127.0.0.1:8001
+- **Host group**: `[server]`
+- **Has gitpull.yml**: No -- use authenticated URL for deployment
 - **DNS**: DigitalOcean (ns1.digitalocean.com, ns2.digitalocean.com, ns3.digitalocean.com)
+
+Available Ansible playbooks:
+- `djangodeployubuntu20.yml` -- Full initial deployment
+- `disableroot.yml` -- Disable root login
 
 ### Deploy Commands
 ```bash
-# Via SSH (root access via key)
-ssh root@140.82.28.166
+# Deploy code (NO gitpull.yml -- use authenticated URL)
+cd /home/john/drawinganimator/ansible
+ansible -i servers server -m shell -a "cd /home/www/drawinganimator && git pull https://nadermx:TOKEN@github.com/nadermx/drawinganimator.git main" --become --become-user=drawinganimator
+ansible -i servers server -m shell -a "supervisorctl restart drawinganimator" --become
 
-# Via Ansible (requires group_vars/all setup)
-cd ansible
-ansible-playbook -i servers gitpull.yml           # Quick deploy
-ansible-playbook -i servers djangodeployubuntu20.yml  # Full deploy
+# Full initial deploy
+ansible-playbook -i servers djangodeployubuntu20.yml
 
 # Check status
-supervisorctl status drawinganimator
-tail -f /var/log/drawinganimator/gunicorn.log
+ansible -i servers server -m shell -a "supervisorctl status drawinganimator" --become
+ansible -i servers server -m shell -a "tail -50 /var/log/drawinganimator/drawinganimator.err.log" --become
 ```
 
 ## GPU API Integration
