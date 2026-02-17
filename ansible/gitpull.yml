@@ -1,0 +1,25 @@
+---
+- name: Deploy drawinganimator updates
+  hosts: server
+  become: no
+
+  vars:
+    project_path: /home/www/drawinganimator
+
+  tasks:
+    - name: Pull latest code from git
+      shell: cd {{ project_path }} && git pull
+      register: git_result
+
+    - name: Show git pull result
+      debug:
+        var: git_result.stdout_lines
+
+    - name: Run database migrations
+      shell: cd {{ project_path }} && ./venv/bin/python manage.py migrate --noinput
+      when: git_result.changed
+
+    - name: Restart drawinganimator service
+      shell: supervisorctl restart drawinganimator
+      become: yes
+      when: git_result.changed
