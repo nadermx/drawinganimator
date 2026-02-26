@@ -246,3 +246,23 @@ Same server as animateadrawing. Critical to:
 - Implement: keep completed animations 7 days for free users, 30 days for Pro
 - Delete failed animations after 24 hours
 - Consider implementing `smart_expire` with view tracking to keep popular animations
+
+---
+
+
+---
+
+## Revenue Acceleration Addendum (February 2026)
+
+### Portfolio Conversion System (Apply Across Projects)
+1. Enforce a clear funnel: first free action -> email gate -> strict daily free cap -> paywall.
+2. Add in-product upgrade triggers at high intent moments (download/export/API usage/advanced options).
+3. Standardize paid packaging: one highlighted plan, annual discount, and role-based tiers (creator/pro/team).
+4. Add reactivation flows for abandoned usage (1 hour, 24 hour, 72 hour reminders with resume links).
+5. Add referral loop (invite to unlock credits) and clear usage counters for free limits.
+
+### Project-Specific Revenue + SEO Actions
+- Add creator pro plans (longer clips, higher quality, no watermark).
+- Add paid music-sync and social export format packs.
+- Add challenge/remix mechanics with premium participation perks.
+- Expand SEO with style/motion galleries and tutorial-intent pages.
