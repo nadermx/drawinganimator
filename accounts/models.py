@@ -83,6 +83,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+    def get_full_name(self):
+        return self.email
+
     @property
     def check_plan(self):
         if self.is_plan_active:
