@@ -1,0 +1,23 @@
+---
+- name: Set up daily cleanup crons for drawinganimator
+  hosts: server
+  become: true
+  vars:
+    projectname: drawinganimator
+    location: drawinganimator
+  tasks:
+    - name: Create cleanup log directory
+      file:
+        path: /var/log/{{ projectname }}
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+
+    - name: Set up cleanup_animations cron at 2am
+      cron:
+        name: "cleanup_animations drawinganimator"
+        user: "{{ ansible_user }}"
+        minute: "0"
+        hour: "2"
+        job: "cd /home/www/{{ location }} && /home/www/{{ location }}/venv/bin/python manage.py cleanup_animations >> /var/log/{{ projectname }}/cleanup.log 2>&1"
