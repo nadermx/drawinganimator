@@ -1,26 +1,81 @@
 ---
-# Initial server setup - run once to create a non-root user and disable root login
-# Update the vars below before running
-
 - hosts: all
   vars:
     ansible_user: root
-    ansible_password: "CHANGE_ME"
-    ansible_sudo_pass: "CHANGE_ME"
-    newuser: myproject
-    newpassword: "CHANGE_ME"
+    newuser: drawinganimator
+    newpassword: "{{ ansible_password }}"
 
   tasks:
-    - name: create a new user called {{ newuser }}
+    - name: Create user {{ newuser }}
       become: true
       user:
-          name: "{{ newuser }}"
-          state: present
-          groups: sudo
-          password: "{{ newpassword | password_hash('sha512') }}"
+        name: "{{ newuser }}"
+        state: present
+        groups: sudo
+        shell: /bin/bash
+        password: "{{ newpassword | password_hash('sha512') }}"
+
+    - name: Set up SSH key for {{ newuser }}
+      become: true
+      authorized_key:
+        user: "{{ newuser }}"
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present
+
+    - name: Allow passwordless sudo for {{ newuser }}
+      become: true
+      lineinfile:
+        path: /etc/sudoers.d/{{ newuser }}
+        line: "{{ newuser }} ALL=(ALL) NOPASSWD:ALL"
+        create: true
+        mode: "0440"
+        validate: "visudo -cf %s"
 
     - name: Disable root login
       become: true
       user:
         name: root
         password_lock: true
+
+    - name: Disable root SSH login
+      become: true
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify: restart sshd
+
+    - name: Enable password authentication in sshd_config
+      become: true
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PasswordAuthentication"
+        line: "PasswordAuthentication yes"
+      notify: restart sshd
+
+    - name: Override cloud-init PasswordAuthentication (50-cloud-init)
+      become: true
+      lineinfile:
+        path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+        regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication yes"
+        create: false
+      ignore_errors: true
+      notify: restart sshd
+
+    - name: Override cloud-init PasswordAuthentication (60-cloudimg-settings)
+      become: true
+      lineinfile:
+        path: /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+        regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication yes"
+        create: false
+      ignore_errors: true
+      notify: restart sshd
+
+  handlers:
+    - name: restart sshd
+      become: true
+      service:
+        name: ssh
+        state: restarted
