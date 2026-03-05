@@ -5,7 +5,7 @@ ROOT_DOMAIN = 'https://drawinganimator.com'
 DEBUG = True
 
 # API Backend for animation processing
-API_BACKEND = 'https://api.imageeditor.ai'  # or https://api.drawinganimator.com
+API_BACKEND = 'https://api.drawinganimator.com'
 API_KEY = ''  # API authentication key
 
 # Google Translate API (for translations)
